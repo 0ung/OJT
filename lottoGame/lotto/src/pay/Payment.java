@@ -15,34 +15,39 @@ public abstract class Payment {
     }
 
     public void process() {
-        // TODO: validate, calculateFee, complete 순서대로 호출
+        validate();
+        calculateFee();
+        complete();
     }
 
     public void validate() {
-        // TODO: 공통 검증 로직 작성
+        if (userId == null) throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다.");
+
+        if (amount < 0) throw new IllegalArgumentException("결제 금액은 0보다 커야합니다.");
+
     }
 
     public abstract int calculateFee(); // TODO: 수수료 계산 로직 자식이 구현
 
     public void complete() {
-        // TODO: 결제 완료 시 출력
+        System.out.println("결제가 완료되었습니다.");
     }
 
-    // TODO: toString 재정의
     @Override
     public String toString() {
-        return "";
+        return "userId=" + userId + "\n amount=" + amount;
     }
 
-    // TODO: equals 재정의
     @Override
     public boolean equals(Object o) {
-        return false;
+        Payment payment = (Payment) o;
+        return Objects.equals(amount, payment.amount) &&
+                Objects.equals(userId, payment.userId) &&
+                Objects.equals(requestTime, payment.requestTime);
     }
 
-    // TODO: hashCode 재정의
     @Override
     public int hashCode() {
-        return Objects.hash();
+        return Objects.hash(userId, amount, requestTime);
     }
 }

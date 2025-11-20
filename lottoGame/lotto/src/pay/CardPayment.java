@@ -12,23 +12,34 @@ public class CardPayment extends Payment {
 
     @Override
     public void validate() {
-        // TODO: 카드 결제만의 검증 (한도 등)
+        super.validate();
+
+        if (amount < 1000) {
+            throw new IllegalArgumentException("카드 결제는 1000원 이상 부터 입니다.");
+        }
+
+        if (cardType != "VISA" && cardType != "MASTER") {
+            throw new IllegalArgumentException("지원하지 않는 카드입니다.");
+        }
     }
 
     @Override
     public int calculateFee() {
-        // TODO: 카드 타입에 따라 수수료 계산
+        if (cardType == "VISA") {
+            return (int) (amount * 0.01);
+        } else if (cardType == "MASTER"){
+            return (int) (amount * 0.05);
+        }
         return 0;
     }
 
     @Override
     public void complete() {
-        // TODO: 카드 결제 성공 메시지 출력
+        System.out.println(cardType+"카드로 "+ amount +"원 결제되었습니다.");
     }
 
     @Override
     public String toString() {
-        // TODO: 카드 결제 정보 출력
-        return "";
+        return "userId=" + userId + "\n amount=" + amount + "\n cardType=" + cardType;
     }
 }

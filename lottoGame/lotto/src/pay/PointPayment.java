@@ -11,23 +11,27 @@ public class PointPayment  extends Payment {
 
     @Override
     public void validate() {
-        // TODO: 포인트 잔액 검증
+        super.validate();
+        if (availablePoints > 0) {
+            System.out.println("현재 이용가능한 포인트는 " + availablePoints + " 입니다.");
+        } else {
+            System.out.println("현재 이용가능한 포인트가 없습니다.");
+        }
     }
 
     @Override
     public int calculateFee() {
-        // TODO: 항상 0원
         return 0;
     }
 
     @Override
     public void complete() {
-        // TODO: 포인트 결제 성공 메시지
+        System.out.println(availablePoints+"포인트 결제가 완료되었습니다.");
     }
 
     @Override
     public String toString() {
         // TODO: 포인트 결제 정보 출력
-        return "";
+        return "userId=" + userId + "\n amount=" + amount + "\n availablePoints=" + availablePoints;
     }
 }

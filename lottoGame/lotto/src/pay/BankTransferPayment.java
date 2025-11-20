@@ -10,23 +10,23 @@ public class BankTransferPayment extends Payment{
 
     @Override
     public void validate() {
-        // TODO: 계좌 이체 특수 검증 (은행 점검 시간 등)
+        super.validate();
+        if (amount >= 10000000) throw new IllegalArgumentException("이체한도 1000만원을 초과했습니다.");
+
     }
 
     @Override
     public int calculateFee() {
-        // TODO: 고정 수수료 반환
         return 0;
     }
 
     @Override
     public void complete() {
-        // TODO: 계좌 이체 성공 메시지 출력
+        System.out.println("성공적으로 " + amount +"원 이체를 완료했습니다.");
     }
 
     @Override
     public String toString() {
-        // TODO: 계좌 이체 정보 출력
-        return "";
+        return "userId=" + userId + "\n amount=" + amount + "\n bankName=" + bankName;
     }
 }
