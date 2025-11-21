@@ -11,6 +11,8 @@ public class BankTransferPayment extends Payment{
     @Override
     public void validate() {
         super.validate();
+
+        if (bankName = null) thorw new IllegalArgumentException("은행을 기입해주세요.");
         if (amount >= 10000000) throw new IllegalArgumentException("이체한도 1000만원을 초과했습니다.");
 
     }
@@ -27,6 +29,6 @@ public class BankTransferPayment extends Payment{
 
     @Override
     public String toString() {
-        return "userId=" + userId + "\n amount=" + amount + "\n bankName=" + bankName;
+        return "userId=" + userId + "-amount=" + amount + "-bankName=" + bankName;
     }
 }

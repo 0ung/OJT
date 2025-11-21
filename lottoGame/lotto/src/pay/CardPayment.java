@@ -1,5 +1,7 @@
 package pay;
 
+import java.util.Objects;
+
 public class CardPayment extends Payment {
     
     //가능하면 Enum도 사용해보세요
@@ -18,16 +20,16 @@ public class CardPayment extends Payment {
             throw new IllegalArgumentException("카드 결제는 1000원 이상 부터 입니다.");
         }
 
-        if (cardType != "VISA" && cardType != "MASTER") {
+        if (!Objects.equals(cardType, "VISA") && !Objects.equals(cardType, "MASTER")) {
             throw new IllegalArgumentException("지원하지 않는 카드입니다.");
         }
     }
 
     @Override
     public int calculateFee() {
-        if (cardType == "VISA") {
+        if (Objects.equals(cardType, "VISA")) {
             return (int) (amount * 0.01);
-        } else if (cardType == "MASTER"){
+        } else if (Objects.equals(cardType, "MASTER")){
             return (int) (amount * 0.05);
         }
         return 0;
@@ -40,6 +42,6 @@ public class CardPayment extends Payment {
 
     @Override
     public String toString() {
-        return "userId=" + userId + "\n amount=" + amount + "\n cardType=" + cardType;
+        return "userId=" + userId + "-amount=" + amount + "-cardType=" + cardType;
     }
 }

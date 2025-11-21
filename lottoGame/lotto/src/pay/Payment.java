@@ -27,7 +27,7 @@ public abstract class Payment {
 
     }
 
-    public abstract int calculateFee(); // TODO: 수수료 계산 로직 자식이 구현
+    public abstract int calculateFee();
 
     public void complete() {
         System.out.println("결제가 완료되었습니다.");
@@ -35,7 +35,7 @@ public abstract class Payment {
 
     @Override
     public String toString() {
-        return "userId=" + userId + "\n amount=" + amount;
+        return "userId=" + userId + "-amount=" + amount + "-requestTime=" + requestTime;
     }
 
     @Override

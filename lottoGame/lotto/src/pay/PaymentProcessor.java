@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class PaymentProcessor {
     public static void main(String[] args) {
-        // TODO: 사용자 입력 받고 Payment 객체 생성 후 PaymentService로 전달
+
         Scanner scanner = new Scanner(System.in);
         PaymentService paymentService = PaymentService.getInstance();
 
@@ -14,30 +14,28 @@ public class PaymentProcessor {
         System.out.println("3. 포인트 결제");
         System.out.print("선택: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = Integer.parseInt(scanner.next());
 
         System.out.print("사용자 ID: ");
-        String userId = scanner.nextLine();
+        String userId = scanner.next();
 
         System.out.print("결제 금액: ");
-        int amount = scanner.nextInt();
-        scanner.nextLine();
+        int amount = Integer.parseInt(scanner.next());
 
         Payment payment = null;
 
         try {
             if (choice == 1) {
                 System.out.print("카드 타입 (VISA/MASTER): ");
-                String cardType = scanner.nextLine().toUpperCase();
+                String cardType = scanner.next().toUpperCase();
                 payment = new CardPayment(userId, amount, cardType);
             } else if (choice == 2) {
                 System.out.print("은행명: ");
-                String bankName = scanner.nextLine();
+                String bankName = scanner.next();
                 payment = new BankTransferPayment(userId, amount, bankName);
             } else if (choice == 3) {
                 System.out.print("보유 포인트: ");
-                int availablePoints = scanner.nextInt();
+                int availablePoints = Integer.parseInt(scanner.next());
                 scanner.nextLine();
                 payment = new PointPayment(userId, amount, availablePoints);
             } else {

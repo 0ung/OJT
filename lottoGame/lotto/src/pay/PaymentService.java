@@ -4,7 +4,7 @@ package pay;
 //이거는 싱글톤패턴으로 구성해보세요
 public class PaymentService {
 
-    private static PaymentService instance;
+    private static PaymentService instance = new PaymentService();
 
     private PaymentService() {}
 
