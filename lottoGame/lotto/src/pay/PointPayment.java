@@ -2,7 +2,7 @@ package pay;
 
 public class PointPayment  extends Payment {
 
-    private int availablePoints;
+    private final int availablePoints;
 
     public PointPayment(String userId, int amount, int availablePoints) {
         super(userId, amount);
@@ -10,13 +10,14 @@ public class PointPayment  extends Payment {
     }
 
     @Override
-    public void validate() {
+    public int validate() {
         super.validate();
         if (availablePoints > 0) {
             System.out.println("현재 이용가능한 포인트는 " + availablePoints + " 입니다.");
         } else {
             System.out.println("현재 이용가능한 포인트가 없습니다.");
         }
+        return 0;
     }
 
     @Override

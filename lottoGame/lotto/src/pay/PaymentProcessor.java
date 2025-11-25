@@ -27,12 +27,16 @@ public class PaymentProcessor {
         try {
             if (choice == 1) {
                 System.out.print("카드 타입 (VISA/MASTER): ");
-                String cardType = scanner.next().toUpperCase();
+                String inputCardType = scanner.next().toUpperCase();
+                CardType cardType = CardType.valueOf(inputCardType);
                 payment = new CardPayment(userId, amount, cardType);
             } else if (choice == 2) {
                 System.out.print("은행명: ");
                 String bankName = scanner.next();
-                payment = new BankTransferPayment(userId, amount, bankName);
+                System.out.println("계좌번호 :");
+                String accountNumber = scanner.next();
+                Bank useBank = Bank.findBank(bankName);
+                payment = new BankTransferPayment(userId, amount, useBank, accountNumber);
             } else if (choice == 3) {
                 System.out.print("보유 포인트: ");
                 int availablePoints = Integer.parseInt(scanner.next());
@@ -46,7 +50,7 @@ public class PaymentProcessor {
             paymentService.pay(payment);
 
         } catch (IllegalArgumentException e) {
-            System.out.println("입력 오류: " + e.getMessage());
+            System.out.println("입력 오류: " + e);
         }
 
         scanner.close();

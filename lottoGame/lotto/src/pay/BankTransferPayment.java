@@ -1,34 +1,45 @@
 package pay;
 
 public class BankTransferPayment extends Payment{
-    private String bankName;
+    private final Bank bank;
+    private final String accountNumber;
+    
 
-    public BankTransferPayment(String userId, int amount, String bankName) {
+    public BankTransferPayment(String userId, int amount, Bank bank, String accountNumber) {
         super(userId, amount);
-        this.bankName = bankName;
+        this.bank = bank;
+        this.accountNumber = accountNumber;
     }
 
     @Override
-    public void validate() {
+    public int validate() {
         super.validate();
 
-        if (bankName = null) thorw new IllegalArgumentException("은행을 기입해주세요.");
-        if (amount >= 10000000) throw new IllegalArgumentException("이체한도 1000만원을 초과했습니다.");
+        if (bank == null) {
+            throw new IllegalArgumentException("은행을 기입해주세요");}
 
-    }
+        if (accountNumber == null) {
+            throw new IllegalArgumentException("계좌를 기입해주세요");
+        }
 
-    @Override
-    public int calculateFee() {
+        if (bank.isOverLimit(amount)) {
+            throw new IllegalArgumentException(bank.getBankName() + "의 이체 한도는" + bank.getLimitAmount() +" 입니다.");
+        }
+
         return 0;
     }
 
+    @Override public int calculateFee() {
+            return bank.getFee();
+        }
+
     @Override
-    public void complete() {
-        System.out.println("성공적으로 " + amount +"원 이체를 완료했습니다.");
+    public void complete () {
+        System.out.println("성공적으로 " + amount +"원 이체를 " + accountNumber + "로 완료했습니다.");
     }
 
     @Override
     public String toString() {
-        return "userId=" + userId + "-amount=" + amount + "-bankName=" + bankName;
+        return "userId=" + userId + "-amount=" + amount + "-bankName=" + bank.getBankName();
     }
 }

@@ -20,11 +20,12 @@ public abstract class Payment {
         complete();
     }
 
-    public void validate() {
+    public int validate() {
         if (userId == null) throw new IllegalArgumentException("유효하지 않은 사용자 ID입니다.");
 
         if (amount < 0) throw new IllegalArgumentException("결제 금액은 0보다 커야합니다.");
 
+        return 0;
     }
 
     public abstract int calculateFee();
