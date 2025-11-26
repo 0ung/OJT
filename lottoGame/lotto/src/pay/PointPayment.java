@@ -32,7 +32,6 @@ public class PointPayment  extends Payment {
 
     @Override
     public String toString() {
-        // TODO: 포인트 결제 정보 출력
         return "userId=" + userId + "-amount=" + amount + "-availablePoints=" + availablePoints;
     }
 }

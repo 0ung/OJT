@@ -35,7 +35,7 @@ public class PaymentProcessor {
                 String bankName = scanner.next();
                 System.out.println("계좌번호 :");
                 String accountNumber = scanner.next();
-                Bank useBank = Bank.findBank(bankName);
+                Bank useBank = BankFinder.findBank(bankName);
                 payment = new BankTransferPayment(userId, amount, useBank, accountNumber);
             } else if (choice == 3) {
                 System.out.print("보유 포인트: ");

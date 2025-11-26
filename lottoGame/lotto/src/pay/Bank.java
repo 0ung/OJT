@@ -1,12 +1,14 @@
 package pay;
 
+import java.util.Arrays;
+
 public enum Bank {
 
-    KB("국민은행", 0, 10000000),
-    SHINHAN("신한은행", 0, 1000000),
-    WOORI("우리은행", 500, 30000000),
-    HANA("하나은행", 500, 30000000),
-    NH("농협은행", 0, 20000000);
+    KB("국민은행", 0, 10_000_000),
+    SHINHAN("신한은행", 0, 10_000_000),
+    WOORI("우리은행", 500, 30_000_000),
+    HANA("하나은행", 500, 30_000_000),
+    NH("농협은행", 0, 20_000_000);
 
     private final String bankName;
     private final int fee;
@@ -32,14 +34,5 @@ public enum Bank {
 
     public boolean isOverLimit(int amount) {
         return amount > limitAmount;
-    }
-
-    public static Bank findBank(String name) {
-        for (Bank bank : values()) {
-            if (bank.bankName.contains(name)) {
-                return bank;
-            }
-        }
-        throw new IllegalArgumentException("지원하지 않는 은행입니다.");
     }
 }
