@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>게시글 상세</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { "primary": "#51b8ec", "background-light": "#f6f7f8" },
+                    fontFamily: { "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light font-display text-gray-800">
+<div class="relative flex min-h-screen w-full flex-col">
+    <main class="flex flex-1 justify-center py-8 px-4">
+        <div class="flex w-full max-w-4xl flex-col gap-6">
+            <div class="flex justify-start">
+                <a href="/" class="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-full transition">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    <span class="font-bold text-sm">목록으로</span>
+                </a>
+            </div>
+
+            <article class="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
+                <header class="border-b pb-6 mb-6 flex justify-between items-start">
+                    <div>
+                        <h1 id="post-title" class="text-3xl font-extrabold text-gray-900 mb-2">로딩 중...</h1>
+                        <p id="post-meta" class="text-gray-500 text-sm">작성자: 익명 | 날짜: ...</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-edit" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-bold transition">수정</button>
+                        <button onclick="openDeleteModal()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-bold transition">삭제</button>
+                    </div>
+                </header>
+
+                <div class="prose max-w-none text-gray-700 leading-relaxed">
+                    <div id="post-image" class="w-full h-64 bg-gray-100 rounded-lg mb-8 bg-cover bg-center"></div>
+                    <p id="post-content" class="whitespace-pre-wrap text-lg">내용을 불러오는 중입니다...</p>
+                </div>
+            </article>
+        </div>
+    </main>
+</div>
+
+<div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+    <div class="w-full max-w-md bg-white rounded-lg p-6 shadow-xl text-center m-4">
+        <span class="material-symbols-outlined text-4xl text-red-500 mb-4 bg-red-50 p-3 rounded-full">delete_outline</span>
+        <h3 class="text-xl font-bold mb-2">삭제 확인</h3>
+        <p class="text-gray-500 mb-6">정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+        <div class="flex gap-3">
+            <button onclick="closeDeleteModal()" class="flex-1 py-3 bg-gray-100 rounded-full font-bold hover:bg-gray-200">취소</button>
+            <button onclick="deletePost()" class="flex-1 py-3 bg-red-500 text-white rounded-full font-bold hover:bg-red-600">삭제</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    // 게시글 상세 조회
+    fetch(`/api/boards/${id}`)
+        .then(res => {
+            if(!res.ok) throw new Error("Not Found");
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById('post-title').innerText = data.title;
+            const date = new Date(data.createdAt).toLocaleDateString();
+            document.getElementById('post-meta').innerText = `작성자: 익명 | 날짜: ${date}`;
+            document.getElementById('post-content').innerText = data.content;
+
+            // 이미지 세팅
+            document.getElementById('post-image').style.backgroundImage = `url('https://picsum.photos/seed/${id}/800/400')`;
+
+            // 수정 버튼 링크 연결
+            document.getElementById('btn-edit').onclick = () => location.href = `/write.html?id=${id}`;
+        })
+        .catch(err => {
+            alert("존재하지 않는 게시글입니다.");
+            location.href = "/";
+        });
+
+    // 삭제 관련 로직
+    const modal = document.getElementById('delete-modal');
+    function openDeleteModal() { modal.classList.remove('hidden'); }
+    function closeDeleteModal() { modal.classList.add('hidden'); }
+
+    function deletePost() {
+        fetch(`/api/boards/${id}`, { method: 'DELETE' })
+            .then(res => {
+                if(res.ok) {
+                    alert("삭제되었습니다.");
+                    location.href = "/";
+                } else {
+                    alert("삭제 실패");
+                }
+            });
+    }
+</script>
+</body>
+</html>

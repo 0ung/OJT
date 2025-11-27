@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html class="light" lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BitmaxCRUD OJT 실습</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { "winter-blue": "#89A5C0", "soft-grey": "#343A40", "light-grey": "#DEE2E6" },
+                    fontFamily: { "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-[#f6f7f8] font-display text-soft-grey">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+    <div class="flex h-full min-h-screen">
+        <aside class="fixed flex h-full w-64 flex-col bg-white p-6 shadow-sm z-10">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="bg-winter-blue rounded-full size-12 flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined">ac_unit</span>
+                </div>
+                <h1 class="text-lg font-bold">BITMAX CRUD</h1>
+            </div>
+            <nav class="flex flex-col gap-2">
+                <a class="flex items-center gap-3 px-4 py-2 rounded-full bg-winter-blue/20 text-winter-blue" href="/">
+                    <span class="material-symbols-outlined text-xl">list_alt</span>
+                    <p class="text-sm font-medium">전체 글</p>
+                </a>
+            </nav>
+            <div class="mt-auto">
+                <a href="/write.html" class="flex w-full items-center justify-center rounded-full h-12 bg-winter-blue hover:bg-winter-blue/90 text-white text-sm font-bold transition">
+                    새 글 작성
+                </a>
+            </div>
+        </aside>
+
+        <main class="ml-64 flex-1 p-8">
+            <div class="mx-auto max-w-4xl">
+                <header class="py-4 mb-4">
+                    <h2 class="text-4xl font-black mb-2">전체 글</h2>
+                    <p class="text-gray-500">자유롭게 글을 작성하고 공유하세요.</p>
+                </header>
+
+                <div id="board-list" class="flex flex-col gap-4">
+                    <div class="text-center py-10 text-gray-400">로딩 중...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // 페이지 로드 시 게시글 목록 가져오기
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/boards')
+            .then(response => response.json())
+            .then(data => {
+                const listContainer = document.getElementById('board-list');
+                listContainer.innerHTML = ''; // 초기화
+
+                if (data.length === 0) {
+                    listContainer.innerHTML = '<div class="text-center py-10 text-gray-500">작성된 게시글이 없습니다.</div>';
+                    return;
+                }
+
+                // 최신순 정렬 (ID 내림차순)
+                data.sort((a, b) => b.id - a.id);
+
+                data.forEach(board => {
+                    // 날짜 포맷팅
+                    const date = new Date(board.createdAt).toLocaleDateString();
+                    // 랜덤 이미지 (ID 기반으로 고정)
+                    const randomImg = `https://picsum.photos/seed/${board.id}/400/250`;
+
+                    const html = `
+                        <div class="group relative flex items-stretch justify-between gap-6 rounded-lg bg-white p-5 border border-light-grey shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer" onclick="location.href='/view.html?id=${board.id}'">
+                            <div class="flex flex-[2_2_0px] flex-col gap-3">
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-lg font-bold leading-tight line-clamp-1">${board.title}</p>
+                                    <p class="text-gray-500 text-sm">작성자: 익명 | 작성일: ${date}</p>
+                                </div>
+                                <p class="text-gray-600 line-clamp-2 text-sm">${board.content}</p>
+                            </div>
+                            <div class="w-48 bg-center bg-no-repeat bg-cover rounded flex-shrink-0" style='background-image: url("${randomImg}");'></div>
+                        </div>
+                    `;
+                    listContainer.innerHTML += html;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('게시글을 불러오는데 실패했습니다.');
+            });
+    });
+</script>
+</body>
+</html>

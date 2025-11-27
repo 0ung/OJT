@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: bitmaxCRUD
+
+  datasource:
+    # 1. 접속 주소 (맨 뒤 'bitmaxCRUD'는 MySQL에 미리 만들어둔 DB 이름이어야 합니다)
+    url: ${DB_URL}
+
+    # 2. MySQL 아이디 (보통 root)
+    username: ${DB_USERNAME}
+
+    # 3. MySQL 비밀번호 (설치할 때 설정한 비밀번호로 바꾸세요!)
+    password: ${DB_PASSWORD}
+
+    # 4. 드라이버 설정
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # ==========================================
+  # JPA (하이버네이트) 설정
+  # ==========================================
+  jpa:
+    # 실행되는 SQL 쿼리를 콘솔창(Log)에 보여줄지 여부
+    show-sql: true
+
+    # SQL을 보기 좋게 정렬해서 출력
+    properties:
+      hibernate:
+        format_sql: true
+
+    hibernate:
+      # [중요] 엔티티(Java)와 DB 테이블의 동기화 옵션
+      # update: 엔티티가 변경되면 DB 테이블도 자동으로 수정해줌 (개발할 때 가장 추천)
+      # create: 실행할 때마다 테이블을 싹 지우고 다시 만듦 (데이터 날아감, 주의!)
+      # none: 아무것도 안 함 (실무용)
+      ddl-auto: update
